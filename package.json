@@ -1,0 +1,27 @@
+{
+  "name": "javascript_plugin_youtube_api",
+  "version": "0.1.0",
+  "description": "JavaScript plugin for the YouTube API",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github_personal:michaeldscherr/js-plugin-youtube-api.git"
+  },
+  "keywords": [
+    "javascript",
+    "youtube",
+    "plugin"
+  ],
+  "author": "Michael Scherr",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.7",
+    "rollup": "^0.34.7",
+    "rollup-plugin-buble": "^0.12.1",
+    "rollup-plugin-uglify": "^1.0.1"
+  }
+}
