@@ -22,19 +22,15 @@ window.youtubeClient = (function(window, document) {
 
     // defaults for plugin
     const defaults = {
-        callbacks: {
-            onAPIReady: () => {},
-            onStateChange: () => {}
-        },
-        api: {
-            playerVars: {
-                autoplay: 0,
-                controls: 0,
-                loop: 1,
-                modestbranding: 1,
-                showinfo: 0,
-                wmode: 'opaque'
-            }
+        onAPIReady: () => {},
+        onStateChange: () => {},
+        playerVars: {
+            autoplay: 0,
+            controls: 0,
+            loop: 1,
+            modestbranding: 1,
+            showinfo: 0,
+            wmode: 'opaque'
         }
     };
 
@@ -59,10 +55,10 @@ window.youtubeClient = (function(window, document) {
         let build = function () {
             player = new window.YT.Player(elem, {
                 videoId: videoid,
-                playerVars: options.api.playerVars,
+                playerVars: options.playerVars,
                 events: {
-                    onReady: options.callbacks.onAPIReady,
-                    onStateChange: (state) => options.callbacks.onStateChange(state)
+                    onReady: options.onAPIReady,
+                    onStateChange: (state) => options.onStateChange(state)
                 }
             });
         };
