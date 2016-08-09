@@ -148,9 +148,6 @@ window.youtubeClient = (function(window, document) {
             return;
         }
         window.onYouTubeIframeAPIReady = () => {
-            // set to true, so the script isn't loaded twice
-            scriptLoaded = true;
-            // loop through the elements, assign a new instance of the
             cb();
         };
         loadAPIScript();
