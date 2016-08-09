@@ -7,21 +7,24 @@ var srcDir = rootDir + '/src';
 var distDir = rootDir + '/dist';
 
 var rollupPlugins = [
-    require('rollup-plugin-buble')(),
-    require('rollup-plugin-uglify')()
+    require('rollup-plugin-buble')()
 ];
 
 gulp.task('scripts', [], function(cb) {
+    var filename = 'youtube-api.js';
+    var bundleOptions = { format: 'es' };
+    if (gutil.env.uglify) {
+        rollupPlugins.push(require('rollup-plugin-uglify')());
+        bundleOptions.sourceMap = true;
+        filename = 'youtube-api.min.js';
+    }
+    bundleOptions.dest = distDir + '/' + filename;
     rollup({
         entry: srcDir + '/youtube-api.js',
         plugins: rollupPlugins
     })
     .then(function(bundle) {
-        bundle.write({
-            dest: distDir + '/youtube-api.min.js',
-            format: 'es',
-            sourceMap: true
-        });
+        bundle.write(bundleOptions);
         cb();
     })
     .catch(function(error) {
