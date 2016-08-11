@@ -20,6 +20,12 @@ if (typeof Object.assign !== 'function') {
 
 window.youtubeClient = (function(window, document) {
 
+    /*
+        * since `onYouTubeIframeAPIReady` is only called once
+        * keep track of the elements before the script is loaded
+    */
+    let initialElemsBeforeInit = [];
+
     // defaults for plugin
     const defaults = {
         onAPIReady: () => {},
@@ -85,7 +91,6 @@ window.youtubeClient = (function(window, document) {
         let tag = document.createElement('script');
         tag.src = 'https://www.youtube.com/iframe_api';
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        scriptLoaded = true;
     }
 
     const YoutubeClient = function(elem, options) {
@@ -118,33 +123,39 @@ window.youtubeClient = (function(window, document) {
         * each element passed in
     */
     const factory = function(elems, options = {}) {
-        const cb = () => {
-            if (!elems.length) {
-                elems = [...elems];
-            }
-            elems.forEach((elem) => {
+        if (!elems.length) {
+            elems = [...elems];
+        }
+        const cb = (targets) => {
+            targets.forEach((target) => {
                 if (typeof options === 'string') {
-                    if (elem.YouTubeClient && typeof elem.YouTubeClient[options] !== 'function') {
-                        throw new Error(`"${options}" method is not defined on ${elem}`);
+                    if (target.YouTubeClient && typeof target.YouTubeClient[options] !== 'function') {
+                        throw new Error(`"${options}" method is not defined on ${target}`);
                     }
-                    return elem.YouTubeClient[options]();
+                    return target.YouTubeClient[options]();
                 }
-                if (elem.youtubeClientInitialized === true) {
+                if (target.youtubeClientInitialized === true) {
                     return true;
                 }
-                const youtubeClient = new YoutubeClient(elem, options);
+                const youtubeClient = new YoutubeClient(target, options);
                 youtubeClient.init();
-                elem.youtubeClientInitialized = true;
-                elem.YouTubeClient = youtubeClient;
-                return elem.YouTubeClient;
+                target.youtubeClientInitialized = true;
+                target.YouTubeClient = youtubeClient;
+                return target.YouTubeClient;
             });
         };
         if (scriptLoaded) {
-            cb();
+            cb(elems);
             return;
         }
+        /*
+            * push initial elements, since youtube script
+            * has not loaded yet
+        */
+        initialElemsBeforeInit.push(...elems);
         window.onYouTubeIframeAPIReady = () => {
-            cb();
+            scriptLoaded = true;
+            cb(initialElemsBeforeInit);
         };
         loadAPIScript();
     };
@@ -161,7 +172,7 @@ window.youtubeClient = (function(window, document) {
         if (document.readyState === 'complete') {
 
             // select elements, initialize plugin
-            const elems = document.querySelectorAll('[data-yt-cli="true"]');
+            const elems = document.querySelectorAll('[data-yt-client="true"]');
             window.youtubeClient(elems);
 
         }
