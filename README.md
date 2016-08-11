@@ -16,7 +16,7 @@ _take an `element` and transform into a `youtube` iframe_
 
 > plugin will automatically be called on
 >
-> `document.querySelectorAll('[data-yt-cli="true"])`
+> `document.querySelectorAll('[data-yt-client="true"])`
 
 each `element` must also have the `[data-yt-videoid]`
 with a valid `youtube` video id
@@ -24,14 +24,28 @@ with a valid `youtube` video id
 ### html
 
 ```html
+<!-- called automatically -->
+<div data-yt-client="true" data-yt-videoid="[VIDEO_ID]"></div>
+<!-- have to invoke plugin manually -->
 <div class="some-class" data-yt-videoid="[VIDEO_ID]"></div>
 ```
 
 ### javascript
 
 ```javascript
-const elems = document.querySelectorAll('.some-class');
-window.youtubeClient(elems);
+var elems = document.querySelectorAll('.some-class');
+window.youtubeClient(elems, {
+  onAPIReady: () => {},
+  onStateChange: () => {},
+  playerVars: {
+    autoplay: 0,
+    controls: 0,
+    loop: 1,
+    modestbranding: 1,
+    showinfo: 0,
+    wmode: 'opaque'
+}
+});
 ```
 
 ## options
@@ -45,7 +59,7 @@ window.youtubeClient(elems);
 ### full default options
 
 ```javascript
-const defaults = {
+{
   onAPIReady: () => {},
   onStateChange: () => {},
   playerVars: {
@@ -56,5 +70,5 @@ const defaults = {
     showinfo: 0,
     wmode: 'opaque'
   }
-};
+}
 ```

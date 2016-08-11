@@ -91,7 +91,7 @@ window.youtubeClient = (function(window, document) {
     const YoutubeClient = function(elem, options) {
         this.options = Object.assign({}, defaults, options);
         this.elem = elem;
-        this.videoid = elem.getAttribute('data-yt-videoid');
+        this.videoid = this.elem.getAttribute('data-yt-videoid');
         this.api = new youtubeAPI(this, this.options);
     };
 
